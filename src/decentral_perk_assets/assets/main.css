@@ -35,3 +35,7 @@ button[type="submit"] {
 #greeting:empty {
     display: none;
 }
+
+.page-container {
+    padding: 20px;
+}

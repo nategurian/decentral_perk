@@ -8,24 +8,32 @@
 
 <div>
   <Router>
-    <Nav>
-      <div class="nav" slot="left">
-        <Link class="brand" to="/">Decentral Perk</Link>
-      </div>
-      <div class="nav" slot="right">
-        <Button>
-          <a href="/">Login</a>
-        </Button>
-        <Button>
-          <a href="/">Sign Up</a>
-        </Button>
-      </div>
-    </Nav>  
-    <Route path="/" component={Home} />
+    <div class="nav-container">
+      <Nav>
+        <div class="nav" slot="left">
+          <Link class="brand" to="/">Decentral Perk</Link>
+        </div>
+        <div class="nav" slot="right">
+          <Button primary>
+            Login
+          </Button>
+          <Button primary outline>
+            Sign Up
+          </Button>
+        </div>
+      </Nav> 
+    </div>
+    <div>
+      <Route path="/" component={Home} />
+    </div> 
   </Router>
 </div>
 
 <style>
+  .nav-container {
+    background-color: #c6c6c6;
+    padding: 10px;
+  }
   .nav {
     display: inline-flex;
   }
