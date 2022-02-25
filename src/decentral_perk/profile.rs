@@ -1,18 +1,11 @@
-use candid::{CandidType, Principal};
-use serde::{Deserialize};
+use candid::{Principal};
 use ic_cdk_macros::*;
 use std::cell::RefCell;
 use std::collections::BTreeMap;
+use crate::types::{Profile};
 
 type IdStore = BTreeMap<String, Principal>;
 type ProfileStore = BTreeMap<Principal, Profile>;
-
-#[derive(Clone, Debug, Default, CandidType, Deserialize)]
-struct Profile {
-    pub name: String,
-    pub description: String,
-    pub keywords: Vec<String>,
-}
 
 thread_local! {
     static PROFILE_STORE: RefCell<ProfileStore> = RefCell::default();
