@@ -1,3 +1,12 @@
+type Profile_2 = record {
+    "name": text;
+    "description": text;
+    "keywords": vec text;
+};
+type Profile = Profile_2;
+
 service : {
-    "greet": (text) -> (text) query;
+    "getSelf": () -> (Profile_2) query;
+    "get": (text) -> (Profile_2) query;
+    "update": (Profile_2) -> ();
 }
