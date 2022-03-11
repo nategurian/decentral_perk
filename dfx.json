@@ -16,6 +16,11 @@
         "src/decentral_perk_assets/public"
       ],
       "type": "assets"
+    },
+    "internet_identity": {
+      "type": "custom",
+      "candid": "src/internet_identity/internet_identity.did",
+      "wasm": "src/internet_identity/internet_identity.wasm"
     }
   },
   "defaults": {

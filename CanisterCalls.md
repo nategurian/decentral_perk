@@ -1,17 +1,24 @@
 # Command Line Calls
 
-getSelf
+## Profile Calls
+
+### getSelf
 ```
 dfx canister call decentral_perk getSelf '()'
 ```
 
-get
+### get
 ```
 dfx canister call decentral_perk get '("hello")'
 ```
 
-update
+### update
 ```
 dfx canister call decentral_perk update '(record {name = "Nate"; description = "Creator of decentral_perk"; keywords = vec {"developer"; "engineer"}})'
+```
+
+### setVendor
+```
+dfx canister call decentral_perk setVendor '(record {name = "Startbucks"; description = "Largest coffee retailer inthe world"; website = "www.starbucks.com"})'
 ```
 

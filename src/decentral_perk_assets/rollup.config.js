@@ -85,7 +85,7 @@ function serve() {
     },
   };
 }
-console.log(canisterIds)
+console.log('canisterIds')
 export default {
   input: "src/main.js",
   output: {
