@@ -19,6 +19,7 @@ dfx canister call decentral_perk update '(record {name = "Nate"; description = "
 
 ### setVendor
 ```
-dfx canister call decentral_perk setVendor '(record {name = "Startbucks"; description = "Largest coffee retailer inthe world"; website = "www.starbucks.com"})'
+ export PRINCIPAL=jkjgp-5hz3y-nunep-6fvoj-ojiml-4sryr-4wfmr-kohxn-6evd6-g5r6l-mae
+dfx canister call decentral_perk setVendor '(record {principal_id = principal '\"$PRINCIPAL\"'; name = "Startbucks"; description = "Largest coffee retailer in the world"; website = "www.starbucks.com"})'
 ```
 

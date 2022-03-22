@@ -8,9 +8,9 @@ pub struct Profile {
     pub keywords: Vec<String>,
 }
 
-#[derive(Clone, Debug, Default, CandidType, Deserialize)]
+#[derive(Clone, Debug, CandidType, Deserialize)]
 pub struct Vendor {
-    // pub principal: Principal,
+    pub principal_id: Principal,
     pub name: String,
     pub description: String,
     pub website: String,

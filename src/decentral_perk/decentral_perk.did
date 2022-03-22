@@ -5,6 +5,12 @@ type Profile_2 = record {
 };
 type Profile = Profile_2;
 
+type Vendor = record {
+    "name": text;
+    "description": text;
+    "website": text;
+}
+
 service : {
     "getSelf": () -> (Profile_2) query;
     "get": (text) -> (Profile_2) query;

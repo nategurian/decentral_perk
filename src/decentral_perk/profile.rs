@@ -1,6 +1,6 @@
 use candid::{Principal};
 use ic_cdk_macros::*;
-use ic_cdk::caller;
+use ic_cdk::{caller, println};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 use crate::types::{Profile, Vendor, Product};
@@ -12,6 +12,7 @@ type VendorStore = BTreeMap<Principal, Vendor>;
 thread_local! {
     static PROFILE_STORE: RefCell<ProfileStore> = RefCell::default();
     static ID_STORE: RefCell<IdStore> = RefCell::default();
+    static VENDOR_STORE: RefCell<VendorStore> = RefCell::default();
 }
 
 #[query(name = "getSelf")]
@@ -52,7 +53,11 @@ fn update(profile: Profile) {
     });
 }
 
-#[update]
-fn setVendor(vendor: Vendor) {
-    println!("Vendor: {}", vendor.name);
+#[update(name="setVendor")]
+fn set_vendor(vendor: Vendor) {
+    VENDOR_STORE.with(|vendor_store| {
+        vendor_store
+            .borrow_mut()
+            .insert(vendor.principal_id, vendor);
+    });
 }
