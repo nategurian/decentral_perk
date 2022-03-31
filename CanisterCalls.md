@@ -23,3 +23,9 @@ dfx canister call decentral_perk update '(record {name = "Nate"; description = "
 dfx canister call decentral_perk setVendor '(record {principal_id = principal '\"$PRINCIPAL\"'; name = "Startbucks"; description = "Largest coffee retailer in the world"; website = "www.starbucks.com"})'
 ```
 
+### getVendorById
+```
+ export PRINCIPAL="principal \"$(dfx identity get-principal)\""
+ dfx canister call decentral_perk getVendorById "($PRINCIPAL)"
+```
+

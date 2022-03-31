@@ -5,6 +5,11 @@ export interface Profile_2 {
   'description' : string,
   'keywords' : Array<string>,
 }
+export interface Vendor {
+  'name' : string,
+  'description' : string,
+  'website' : string,
+}
 export interface _SERVICE {
   'get' : (arg_0: string) => Promise<Profile_2>,
   'getSelf' : () => Promise<Profile_2>,

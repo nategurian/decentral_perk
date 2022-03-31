@@ -61,3 +61,20 @@ fn set_vendor(vendor: Vendor) {
             .insert(vendor.principal_id, vendor);
     });
 }
+
+#[query(name="getVendorById")]
+fn get_vendor_by_id(principal_id: Principal) -> Vendor {
+    VENDOR_STORE.with(|vendor_store| {
+        vendor_store
+            .borrow()
+            .get(&principal_id)
+            .cloned()
+            .unwrap_or_else(|| Vendor{
+                principal_id: principal_id,
+                name: "".to_string(),
+                description: "".to_string(),
+                website: "".to_string(),
+                products: Some(vec![])
+            })
+    });
+}
