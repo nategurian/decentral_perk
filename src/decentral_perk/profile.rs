@@ -64,7 +64,7 @@ fn set_vendor(vendor: Vendor) {
 
 #[query(name="getVendorById")]
 fn get_vendor_by_id(principal_id: Principal) -> Vendor {
-    VENDOR_STORE.with(|vendor_store| {
+    return VENDOR_STORE.with(|vendor_store| {
         vendor_store
             .borrow()
             .get(&principal_id)

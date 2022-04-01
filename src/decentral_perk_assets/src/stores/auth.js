@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { Actor, HttpAgent } from '@dfinity/agent';
+import { idlFactory } from '../../../declarations/decentral_perk_assets';
 
 
 // Creates actor for backend canister 
@@ -17,7 +18,7 @@ export const createActor = (options) => {
     };
   }
   else if(!options.agentOptions) {
-    options.agentOptions = hostOptions,
+    options.agentOptions = hostOptions;
   }
   else {
     options.agentOptions.host = hostOptions.host;
@@ -31,10 +32,10 @@ export const createActor = (options) => {
       console.warn('Unable to fetch root key, please ensure local replica is running');
     })
   };
-
+  console.log('hi')
   return Actor.createActor(idlFactory, {
     agent,
-    canisterId: process.env.BACKEND_CANISTER_ID,
+    canisterId: process.env.DECENTRAL_PERK_ASSETS_CANISTER_ID,
     ...options?.actorOptions
   });
 };
