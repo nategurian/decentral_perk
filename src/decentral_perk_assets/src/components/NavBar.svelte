@@ -2,6 +2,7 @@
   import { Nav, Button } from 'svelte-chota';
   import { Router, Route, Link } from 'svelte-routing';
   import { AuthClient } from '@dfinity/auth-client';
+  import { Principal } from "@dfinity/principal";
   import { auth, createActor } from '../stores/auth';
   import { host } from '../stores/store';
   import Home from '../routing/Home.svelte';
@@ -20,7 +21,13 @@
   onMount(async() => {
     // Create auth client for Internet Identity
     client = await AuthClient.create();
-
+    const persistedAuth = localStorage.getItem('auth');
+    if(persistedAuth) {
+      const parsedPersistedAuth = JSON.parse(persistedAuth);
+      parsedPersistedAuth.principal = client.getIdentity().getPrincipal();
+      auth.update(() => parsedPersistedAuth);
+    }
+    console.log($auth)
     if($auth.loggedIn) {
       // Fetch to see if user is vendor and retrieve store.
       const identity = client.getIdentity();
@@ -35,9 +42,8 @@
         agent,
         canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
       });
-      console.log('Fetching My Store')
       const result = await backendActor.getMyStore();
-      console.log(result);
+      //TODO: Set store to global variable
     }
   })
 
@@ -59,6 +65,7 @@
         }
       })
     })) 
+    localStorage.setItem('auth', JSON.stringify($auth));
 
     // Get Vendor for user:
     // Fetch to see if user is vendor and retrieve store.
@@ -75,7 +82,6 @@
       canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
     });
     const result = await backendActor.getMyStore();
-    console.log('My Store: ', result);
   };
 </script>
 
@@ -93,6 +99,13 @@
             </Button>
             <Button primary outline>
               Sign Up
+            </Button>
+          {:else}
+            <Button dropdown={`${$auth.principal.toString().substring(0, 20)}...`} primary>
+              <p>My Orders</p>
+              <p>My Store</p>
+              <hr />
+              <p>Logout</p>
             </Button>
           {/if}
         </div>
