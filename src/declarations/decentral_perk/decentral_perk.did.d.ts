@@ -12,6 +12,7 @@ export interface Vendor {
 }
 export interface _SERVICE {
   'get' : (arg_0: string) => Promise<Profile_2>,
+  'getMyStore' : () => Promise<Vendor>,
   'getSelf' : () => Promise<Profile_2>,
   'update' : (arg_0: Profile_2) => Promise<undefined>,
 }

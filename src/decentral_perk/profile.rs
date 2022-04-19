@@ -78,3 +78,21 @@ fn get_vendor_by_id(principal_id: Principal) -> Vendor {
             })
     });
 }
+
+#[query(name="getMyStore")]
+fn getMyStore() -> Vendor {
+    let id = caller();
+    return VENDOR_STORE.with(|vendor_store| {
+        vendor_store
+            .borrow()
+            .get(&id)
+            .cloned()
+            .unwrap_or_else(|| Vendor{
+                principal_id: id,
+                name: "".to_string(),
+                description: "".to_string(),
+                website: "".to_string(),
+                products: Some(vec![])
+            })
+    });
+}

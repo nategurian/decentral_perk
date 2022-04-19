@@ -15,4 +15,5 @@ service : {
     "getSelf": () -> (Profile_2) query;
     "get": (text) -> (Profile_2) query;
     "update": (Profile_2) -> ();
+    "getMyStore": () -> (Vendor) query;
 }
