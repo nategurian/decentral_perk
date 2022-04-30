@@ -5,3 +5,13 @@ body {
 .page-container {
   padding: 20px;
 }
+
+.nav .button {
+  margin: 0 !important;
+  right:100px;
+}
+
+/**  Will remove */
+.nav-right {
+  margin-right: 50px !important;
+}
