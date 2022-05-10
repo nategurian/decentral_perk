@@ -4,6 +4,7 @@
   import { AuthClient } from '@dfinity/auth-client';
   import { Principal } from "@dfinity/principal";
   import { auth, createActor } from '../stores/auth';
+  import { vendorStore } from '../stores/vendorStore';
   import { host } from '../stores/store';
   import Home from '../routing/Home.svelte';
   import { onMount } from 'svelte';
@@ -43,7 +44,9 @@
         canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
       });
       const result = await backendActor.getMyStore();
-      //TODO: Set store to global variable
+      if(result) {
+        vendorStore.set(result);
+      }
     }
   })
 
@@ -82,6 +85,9 @@
       canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
     });
     const result = await backendActor.getMyStore();
+    if(result) {
+        vendorStore.set(result);
+    }
   };
 </script>
 
@@ -103,7 +109,9 @@
           {:else}
             <Button dropdown={`${$auth.principal.toString().substring(0, 15)}...`} primary>
               <p>My Orders</p>
-              <p>My Store</p>
+              {#if $vendorStore}
+                <p>My Store</p>
+              {/if}
               <hr />
               <p>Logout</p>
             </Button>
