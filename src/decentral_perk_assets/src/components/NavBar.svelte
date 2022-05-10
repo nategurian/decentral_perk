@@ -101,7 +101,7 @@
               Sign Up
             </Button>
           {:else}
-            <Button dropdown={`${$auth.principal.toString().substring(0, 20)}...`} primary>
+            <Button dropdown={`${$auth.principal.toString().substring(0, 15)}...`} primary>
               <p>My Orders</p>
               <p>My Store</p>
               <hr />
