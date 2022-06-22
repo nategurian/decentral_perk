@@ -80,7 +80,7 @@ fn get_vendor_by_id(principal_id: Principal) -> Vendor {
 }
 
 #[query(name="getMyStore")]
-fn getMyStore() -> Vendor {
+fn get_my_store() -> Vendor {
     let id = caller();
     return VENDOR_STORE.with(|vendor_store| {
         vendor_store

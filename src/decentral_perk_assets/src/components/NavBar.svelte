@@ -2,11 +2,11 @@
   import { Nav, Button } from 'svelte-chota';
   import { Router, Route, Link } from 'svelte-routing';
   import { AuthClient } from '@dfinity/auth-client';
-  import { Principal } from "@dfinity/principal";
   import { auth, createActor } from '../stores/auth';
   import { vendorStore } from '../stores/vendorStore';
   import { host } from '../stores/store';
   import Home from '../routing/Home.svelte';
+  import Dashboard from '../routing/VendorDashboard.svelte';
   import { onMount } from 'svelte';
   import { HttpAgent, Actor } from '@dfinity/agent';
   import { idlFactory } from '../../../declarations/decentral_perk/decentral_perk.did.js';
@@ -17,7 +17,6 @@
   let backendActor;
 
   const iiCanisterId = '';
-  
 
   onMount(async() => {
     // Create auth client for Internet Identity
@@ -44,9 +43,12 @@
         canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
       });
       const result = await backendActor.getMyStore();
-      if(result) {
+      console.log('My Store: ', result);
+      // Right now, backend sends an empty store if there is no store assigned to the authed user
+      // As a hack for now, check to see if a name is present before setting name.
+      // TODO: Adjust backend call to return null or undefined
+      if(result.name)
         vendorStore.set(result);
-      }
     }
   })
 
@@ -85,9 +87,12 @@
       canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
     });
     const result = await backendActor.getMyStore();
-    if(result) {
-        vendorStore.set(result);
-    }
+    console.log('My Store: ', result);
+    // Right now, backend sends an empty store if there is no store assigned to the authed user
+    // As a hack for now, check to see if a name is present before setting name.
+    // TODO: Adjust backend call to return null or undefined
+    if(result.name)
+      vendorStore.set(result);
   };
 </script>
 
@@ -121,6 +126,7 @@
     </div>
     <div>
       <Route path="/" component={Home} />
+      <Route path="/dashboard" component={Dashboard} />
     </div> 
   </Router>
 </div>
