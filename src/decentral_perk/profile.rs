@@ -3,7 +3,7 @@ use ic_cdk_macros::*;
 use ic_cdk::{caller, println};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
-use crate::types::{Profile, Vendor, Product};
+use crate::types::{Profile, Vendor, Product, GetVendorReceipt, GetVendorErr};
 
 type IdStore = BTreeMap<String, Principal>;
 type ProfileStore = BTreeMap<Principal, Profile>;
@@ -80,19 +80,18 @@ fn get_vendor_by_id(principal_id: Principal) -> Vendor {
 }
 
 #[query(name="getMyStore")]
-fn get_my_store() -> Vendor {
+fn get_my_store() -> GetVendorReceipt {
     let id = caller();
-    return VENDOR_STORE.with(|vendor_store| {
+    let vendor = VENDOR_STORE.with(|vendor_store| {
         vendor_store
             .borrow()
             .get(&id)
             .cloned()
-            .unwrap_or_else(|| Vendor{
-                principal_id: id,
-                name: "".to_string(),
-                description: "".to_string(),
-                website: "".to_string(),
-                products: Some(vec![])
-            })
+            .unwrap_or_default()
     });
+    if vendor.name == "" {
+        return GetVendorReceipt::Err(GetVendorErr::NoStoreFound) 
+    } else {
+        return GetVendorReceipt::Ok(vendor)
+    }
 }

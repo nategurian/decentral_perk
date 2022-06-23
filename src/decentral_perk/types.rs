@@ -8,6 +8,18 @@ pub struct Profile {
     pub keywords: Vec<String>,
 }
 
+impl Default for Vendor {
+    fn default() -> Self {
+        Self {
+            principal_id: Principal::anonymous(),
+            name: Default::default(),
+            description: Default::default(),
+            website: Default::default(),
+            products: Default::default()
+        }
+    }
+}
+
 #[derive(Clone, Debug, CandidType, Deserialize)]
 pub struct Vendor {
     pub principal_id: Principal,
@@ -23,4 +35,11 @@ pub struct Product {
     pub principal: Principal,
     pub name: String,
     // Add photo, description, price
+}
+
+pub type GetVendorReceipt = Result<Vendor, GetVendorErr>;
+
+#[derive(CandidType)]
+pub enum GetVendorErr {
+    NoStoreFound
 }
