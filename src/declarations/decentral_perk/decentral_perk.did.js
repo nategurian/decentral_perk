@@ -9,9 +9,11 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Text,
     'website' : IDL.Text,
   });
+  const GetVendorErr = IDL.Variant({ 'NoStoreFound' : IDL.Null });
+  const GetVendorReceipt = IDL.Variant({ 'Ok' : Vendor, 'Err' : GetVendorErr });
   return IDL.Service({
     'get' : IDL.Func([IDL.Text], [Profile_2], ['query']),
-    'getMyStore' : IDL.Func([], [Vendor], ['query']),
+    'getMyStore' : IDL.Func([], [GetVendorReceipt], ['query']),
     'getSelf' : IDL.Func([], [Profile_2], ['query']),
     'update' : IDL.Func([Profile_2], [], []),
   });

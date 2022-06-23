@@ -1,4 +1,7 @@
 import type { Principal } from '@dfinity/principal';
+export type GetVendorErr = { 'NoStoreFound' : null };
+export type GetVendorReceipt = { 'Ok' : Vendor } |
+  { 'Err' : GetVendorErr };
 export type Profile = Profile_2;
 export interface Profile_2 {
   'name' : string,
@@ -12,7 +15,7 @@ export interface Vendor {
 }
 export interface _SERVICE {
   'get' : (arg_0: string) => Promise<Profile_2>,
-  'getMyStore' : () => Promise<Vendor>,
+  'getMyStore' : () => Promise<GetVendorReceipt>,
   'getSelf' : () => Promise<Profile_2>,
   'update' : (arg_0: Profile_2) => Promise<undefined>,
 }
