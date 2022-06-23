@@ -11,6 +11,10 @@ body {
   right:100px;
 }
 
+.nav-link {
+  padding: 0 !important;
+}
+
 /**  Will remove */
 .nav-right {
   margin-right: 50px !important;

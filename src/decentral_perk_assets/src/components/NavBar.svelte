@@ -4,19 +4,13 @@
   import { AuthClient } from '@dfinity/auth-client';
   import { auth, createActor } from '../stores/auth';
   import { vendorStore } from '../stores/vendorStore';
-  import { host } from '../stores/store';
   import Home from '../routing/Home.svelte';
   import Dashboard from '../routing/VendorDashboard.svelte';
   import { onMount } from 'svelte';
-  import { HttpAgent, Actor } from '@dfinity/agent';
-  import { idlFactory } from '../../../declarations/decentral_perk/decentral_perk.did.js';
 
   // Variables
   /** @Type {AuthClient} */
   let client;
-  let backendActor;
-
-  const iiCanisterId = '';
 
   onMount(async() => {
     // Create auth client for Internet Identity
@@ -25,31 +19,22 @@
     if(persistedAuth) {
       const parsedPersistedAuth = JSON.parse(persistedAuth);
       parsedPersistedAuth.principal = client.getIdentity().getPrincipal();
+      parsedPersistedAuth.actor = createActor({
+        agentOptions: {
+          identity: client.getIdentity()
+        }
+      })
       auth.update(() => parsedPersistedAuth);
-    }
-    console.log($auth)
-    if($auth.loggedIn) {
-      // Fetch to see if user is vendor and retrieve store.
-      const identity = client.getIdentity();
-      const agent = new HttpAgent({identity, $host});
+      if($auth.loggedIn) {
+        const result = await $auth.actor.getMyStore();
+        console.log('My Store: ', result);
+        if(result.Ok) {
+          vendorStore.set(result.Ok);
+          localStorage.setItem('vendor', JSON.stringify(result.Ok));
+        }
+      }
+    } 
 
-      if(process.env.DFX_NETWORK === 'local')
-        agent.fetchRootKey().catch((err) => {
-          console.warn('Unable to fetchrootkey')
-        });
-
-      backendActor = Actor.createActor(idlFactory, {
-        agent,
-        canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
-      });
-      const result = await backendActor.getMyStore();
-      console.log('My Store: ', result);
-      // Right now, backend sends an empty store if there is no store assigned to the authed user
-      // As a hack for now, check to see if a name is present before setting name.
-      // TODO: Adjust backend call to return null or undefined
-      if(result.name)
-        vendorStore.set(result);
-    }
   })
 
   // Auth Actions
@@ -69,30 +54,30 @@
           identity: client.getIdentity()
         }
       })
-    })) 
+    })); 
+    // Note $uth.actor does not save properly to local storage.
     localStorage.setItem('auth', JSON.stringify($auth));
-
-    // Get Vendor for user:
-    // Fetch to see if user is vendor and retrieve store.
-    const identity = client.getIdentity();
-    const agent = new HttpAgent({identity, $host});
-
-    if(process.env.DFX_NETWORK === 'local')
-      agent.fetchRootKey().catch((err) => {
-        console.warn('Unable to fetchrootkey')
-      });
-
-    backendActor = Actor.createActor(idlFactory, {
-      agent,
-      canisterId: process.env.DECENTRAL_PERK_CANISTER_ID
-    });
-    const result = await backendActor.getMyStore();
+    const result = await $auth.actor.getMyStore();
     console.log('My Store: ', result);
-    // Right now, backend sends an empty store if there is no store assigned to the authed user
-    // As a hack for now, check to see if a name is present before setting name.
-    // TODO: Adjust backend call to return null or undefined
-    if(result.name)
-      vendorStore.set(result);
+    console.log('Principal: ', $auth.principal.toString())
+    if(result.Ok) {
+      vendorStore.set(result.Ok);
+      localStorage.setItem('vendor', JSON.stringify(result.Ok));
+    }
+  };
+
+  const handleLogout = async () => {
+    console.log('Logging out...');
+    localStorage.clear();
+    vendorStore.set(undefined)
+    auth.update(() => ({
+      loggedIn: false,
+      principal: '',
+      actor: createActor() // created anon actor.
+    }));
+    const test = await $auth.actor.getMyStore();
+    console.log('Test result: ', test)
+    localStorage.setItem('auth', JSON.stringify($auth)); 
   };
 </script>
 
@@ -113,12 +98,12 @@
             </Button>
           {:else}
             <Button dropdown={`${$auth.principal.toString().substring(0, 15)}...`} primary>
-              <p>My Orders</p>
+              <p class="menu-option">My Orders</p>
               {#if $vendorStore}
-                <p>My Store</p>
+                <Link class="nav-link" to="dashboard">My Store</Link>
               {/if}
               <hr />
-              <p>Logout</p>
+              <p class="menu-option" on:click={handleLogout}>Logout</p>
             </Button>
           {/if}
         </div>
@@ -126,7 +111,7 @@
     </div>
     <div>
       <Route path="/" component={Home} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route path="dashboard" component={Dashboard} />
     </div> 
   </Router>
 </div>
@@ -136,7 +121,12 @@
     background-color: #c6c6c6;
     padding: 10px;
   }
+
   .nav {
     display: inline-flex;
+  }
+
+  .menu-option {
+    cursor: pointer;
   }
 </style>
