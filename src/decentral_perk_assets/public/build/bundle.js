@@ -30287,9 +30287,9 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			t = text(t_value);
-    			add_location(div0, file$2, 4, 2, 105);
+    			add_location(div0, file$2, 13, 2, 358);
     			attr_dev(div1, "class", "page-container");
-    			add_location(div1, file$2, 3, 0, 74);
+    			add_location(div1, file$2, 12, 0, 327);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -30326,13 +30326,21 @@ var app = (function () {
     	component_subscribe($$self, vendorStore, $$value => $$invalidate(0, $vendorStore = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('VendorDashboard', slots, []);
+
+    	onMount(() => {
+    		// Check localStorage (for page refresh instances)
+    		const persistedVendor = localStorage.getItem('vendor');
+
+    		if (persistedVendor) vendorStore.set(JSON.parse(persistedVendor));
+    	});
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<VendorDashboard> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ vendorStore, $vendorStore });
+    	$$self.$capture_state = () => ({ onMount, vendorStore, $vendorStore });
     	return [$vendorStore];
     }
 
