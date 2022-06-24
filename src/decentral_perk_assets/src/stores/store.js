@@ -5,3 +5,5 @@ export const host = writable(
     ? 'http://localhost:8000'
     : 'ic0.app'
 )
+
+export const vendors = writable([]);

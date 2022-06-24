@@ -14,4 +14,10 @@
   <div>
     {$vendorStore.name}
   </div>
+  <div>
+    {$vendorStore.description}
+  </div>
+  <div>
+    {$vendorStore.website}
+  </div>
 </div>

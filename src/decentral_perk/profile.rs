@@ -1,7 +1,7 @@
 use candid::{Principal};
 use ic_cdk_macros::*;
 use ic_cdk::{caller, println};
-use std::cell::RefCell;
+use std::{cell::RefCell, borrow::Borrow};
 use std::collections::BTreeMap;
 use crate::types::{Profile, Vendor, Product, GetVendorReceipt, GetVendorErr};
 
@@ -94,4 +94,25 @@ fn get_my_store() -> GetVendorReceipt {
     } else {
         return GetVendorReceipt::Ok(vendor)
     }
+}
+
+#[query(name="getAllVendors")]
+fn get_all_vendors() -> Vec<Vendor> {
+    let keys: Vec<Principal> = VENDOR_STORE.with(|vendor_store| {
+        vendor_store
+            .borrow().keys().cloned().collect()
+    });
+    let mut vendors: Vec<Vendor> = Vec::new();
+    for key in keys {
+        let key1: Principal = key;
+        let vendor: Vendor = VENDOR_STORE.with(|vendor_store| {
+            vendor_store
+            .borrow()
+            .get(&key1)
+            .cloned()
+            .unwrap_or_default()
+        });
+        vendors.push(vendor)
+    }
+    return vendors
 }

@@ -26,4 +26,5 @@ service : {
     "get": (text) -> (Profile_2) query;
     "update": (Profile_2) -> ();
     "getMyStore": () -> (GetVendorReceipt) query;
+    "getAllVendors": () -> (vec Vendor) query;
 }

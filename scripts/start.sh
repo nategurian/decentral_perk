@@ -10,3 +10,7 @@ echo 'installing internet identity'
 II_ENV=development dfx deploy --no-wallet --argument '(null)'
 dfx canister call internet_identity init_salt
 echo $?
+
+# initialize some vendor stores
+echo "Initializing Stores"
+source scripts/initStores.sh

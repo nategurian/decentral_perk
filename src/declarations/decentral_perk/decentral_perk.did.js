@@ -13,6 +13,7 @@ export const idlFactory = ({ IDL }) => {
   const GetVendorReceipt = IDL.Variant({ 'Ok' : Vendor, 'Err' : GetVendorErr });
   return IDL.Service({
     'get' : IDL.Func([IDL.Text], [Profile_2], ['query']),
+    'getAllVendors' : IDL.Func([], [IDL.Vec(Vendor)], ['query']),
     'getMyStore' : IDL.Func([], [GetVendorReceipt], ['query']),
     'getSelf' : IDL.Func([], [Profile_2], ['query']),
     'update' : IDL.Func([Profile_2], [], []),

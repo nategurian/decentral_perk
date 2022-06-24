@@ -3,6 +3,7 @@
   import { Router, Route, Link } from 'svelte-routing';
   import { AuthClient } from '@dfinity/auth-client';
   import { auth, createActor } from '../stores/auth';
+  import { vendors } from '../stores/store';
   import { vendorStore } from '../stores/vendorStore';
   import Home from '../routing/Home.svelte';
   import Dashboard from '../routing/VendorDashboard.svelte';
@@ -33,7 +34,14 @@
           localStorage.setItem('vendor', JSON.stringify(result.Ok));
         }
       }
-    } 
+    }
+    
+    // Call to get all vendors test
+    const vendorsResponse = await $auth.actor.getAllVendors();
+    if(vendorsResponse) {
+      vendors.set(vendorsResponse);
+      console.table(vendorsResponse)
+    }
 
   })
 
