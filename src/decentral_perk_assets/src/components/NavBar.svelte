@@ -94,7 +94,7 @@
     <div class="nav-container">
       <Nav>
         <div class="nav" slot="left">
-          <Link class="brand" to="/">Decentral Perk</Link>
+          <Link class="brand" to="/">deCentral Perk</Link>
         </div>
         <div class="nav" slot="right">
           {#if !$auth.loggedIn}

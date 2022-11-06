@@ -1,45 +1,56 @@
-use candid::{CandidType, Principal};
-use serde::{Deserialize};
+use ic_cdk::export::{
+    candid::{CandidType},
+    serde::Deserialize
+};
 
-#[derive(Clone, Debug, Default, CandidType, Deserialize)]
-pub struct Profile {
-    pub name: String,
-    pub description: String,
-    pub keywords: Vec<String>,
+#[derive(CandidType, Deserialize)]
+pub struct User {
+    pub username: String
 }
 
-impl Default for Vendor {
-    fn default() -> Self {
-        Self {
-            principal_id: Principal::anonymous(),
-            name: Default::default(),
-            description: Default::default(),
-            website: Default::default(),
-            products: Default::default()
-        }
-    }
+#[derive(CandidType, Deserialize)]
+pub struct AddUserRequest {
+    pub username: String
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize)]
-pub struct Vendor {
-    pub principal_id: Principal,
-    pub name: String,
-    pub description: String,
-    pub website: String,
-    pub products: Option<Vec<Product>>
-    // TODO: Add ICP address, BTC address, DIP20 address
+#[derive(CandidType, Deserialize)]
+pub struct AddUserResponse {
+    pub response: AddUserResponseType
+} 
+
+#[derive(CandidType, Deserialize)]
+pub enum AddUserResponseType {
+    Success,
+    AlreadyAUser,
+    Error
 }
 
-#[derive(Clone, Debug, CandidType, Deserialize)]
-pub struct Product {
-    pub principal: Principal,
-    pub name: String,
-    // Add photo, description, price
+#[derive(CandidType, Deserialize)]
+pub struct Post {
+    pub created_at: u64,
+    pub content: String,
+    pub category: PostCategory
 }
 
-pub type GetVendorReceipt = Result<Vendor, GetVendorErr>;
-
-#[derive(CandidType)]
-pub enum GetVendorErr {
-    NoStoreFound
+#[derive(CandidType, Deserialize)]
+pub enum PostCategory {
+    General,
+    BrewTip,
+    Roasts
 }
+
+#[derive(CandidType, Deserialize)]
+pub struct AddPostRequest {
+    pub content: String
+}
+
+#[derive(CandidType, Deserialize)]
+pub struct AddPostResponse {
+    pub response: AddUserResponseType
+} 
+
+#[derive(CandidType, Deserialize)]
+pub enum AddPostResponseType {
+    Success,
+    Error
+} 

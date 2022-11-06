@@ -1,22 +1,14 @@
 export const idlFactory = ({ IDL }) => {
-  const Profile_2 = IDL.Record({
-    'name' : IDL.Text,
-    'description' : IDL.Text,
-    'keywords' : IDL.Vec(IDL.Text),
+  const AddPostRequest = IDL.Record({ 'content' : IDL.Text });
+  const AddPostResponseType = IDL.Variant({
+    'Error' : IDL.Null,
+    'Success' : IDL.Null,
   });
-  const Vendor = IDL.Record({
-    'name' : IDL.Text,
-    'description' : IDL.Text,
-    'website' : IDL.Text,
-  });
-  const GetVendorErr = IDL.Variant({ 'NoStoreFound' : IDL.Null });
-  const GetVendorReceipt = IDL.Variant({ 'Ok' : Vendor, 'Err' : GetVendorErr });
+  const AddPostResponse = IDL.Record({ 'response' : AddPostResponseType });
+  const AddUserRequest = IDL.Record({ 'username' : IDL.Text });
   return IDL.Service({
-    'get' : IDL.Func([IDL.Text], [Profile_2], ['query']),
-    'getAllVendors' : IDL.Func([], [IDL.Vec(Vendor)], ['query']),
-    'getMyStore' : IDL.Func([], [GetVendorReceipt], ['query']),
-    'getSelf' : IDL.Func([], [Profile_2], ['query']),
-    'update' : IDL.Func([Profile_2], [], []),
+    'add_post' : IDL.Func([AddPostRequest], [AddPostResponse], []),
+    'add_user' : IDL.Func([AddUserRequest], [AddPostResponse], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

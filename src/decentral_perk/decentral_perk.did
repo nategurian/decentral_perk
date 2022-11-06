@@ -1,30 +1,47 @@
-type Profile_2 = record {
-    "name": text;
-    "description": text;
-    "keywords": vec text;
+type User = record {
+    username: text;
 };
 
-type Profile = Profile_2;
-
-type Vendor = record {
-    "name": text;
-    "description": text;
-    "website": text;
+type AddUserRequest = record {
+    username: text;
 };
 
-type GetVendorErr = variant {
-    NoStoreFound;
+type AddUserResponse = record {
+    response: AddUserResponseType;
 };
 
-type GetVendorReceipt = variant {
-    Err: GetVendorErr;
-    Ok: Vendor;
+type AddUserResponseType = variant {
+    Success;
+    AlreadyAUser;
+    Error;
+};
+
+type Post = record {
+    created_timestamp: nat64;
+    content: text;
+    category: PostCategory;
+};
+
+type PostCategory = variant {
+    General;
+    BrewTip;
+    Roasts;
+};
+
+type AddPostRequest = record {
+    content: text;
+};
+
+type AddPostResponse = record {
+    response: AddPostResponseType;
+};
+
+type AddPostResponseType = variant {
+    Success;
+    Error;
 };
 
 service : {
-    "getSelf": () -> (Profile_2) query;
-    "get": (text) -> (Profile_2) query;
-    "update": (Profile_2) -> ();
-    "getMyStore": () -> (GetVendorReceipt) query;
-    "getAllVendors": () -> (vec Vendor) query;
+    "add_user": (AddUserRequest) -> (AddPostResponse);
+    "add_post": (AddPostRequest) -> (AddPostResponse);
 }

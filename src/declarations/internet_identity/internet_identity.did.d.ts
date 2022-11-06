@@ -1,4 +1,6 @@
 import type { Principal } from '@dfinity/principal';
+import type { ActorMethod } from '@dfinity/agent';
+
 export interface Challenge {
   'png_base64' : string,
   'challenge_key' : ChallengeKey,
@@ -70,29 +72,21 @@ export type Token = {};
 export type UserKey = PublicKey;
 export type UserNumber = bigint;
 export interface _SERVICE {
-  'add' : (arg_0: UserNumber, arg_1: DeviceData) => Promise<undefined>,
-  'create_challenge' : (arg_0: ProofOfWork) => Promise<Challenge>,
-  'get_delegation' : (
-      arg_0: UserNumber,
-      arg_1: FrontendHostname,
-      arg_2: SessionKey,
-      arg_3: Timestamp,
-    ) => Promise<GetDelegationResponse>,
-  'get_principal' : (arg_0: UserNumber, arg_1: FrontendHostname) => Promise<
-      Principal
-    >,
-  'http_request' : (arg_0: HttpRequest) => Promise<HttpResponse>,
-  'init_salt' : () => Promise<undefined>,
-  'lookup' : (arg_0: UserNumber) => Promise<Array<DeviceData>>,
-  'prepare_delegation' : (
-      arg_0: UserNumber,
-      arg_1: FrontendHostname,
-      arg_2: SessionKey,
-      arg_3: [] | [bigint],
-    ) => Promise<[UserKey, Timestamp]>,
-  'register' : (arg_0: DeviceData, arg_1: ChallengeResult) => Promise<
-      RegisterResponse
-    >,
-  'remove' : (arg_0: UserNumber, arg_1: DeviceKey) => Promise<undefined>,
-  'stats' : () => Promise<InternetIdentityStats>,
+  'add' : ActorMethod<[UserNumber, DeviceData], undefined>,
+  'create_challenge' : ActorMethod<[ProofOfWork], Challenge>,
+  'get_delegation' : ActorMethod<
+    [UserNumber, FrontendHostname, SessionKey, Timestamp],
+    GetDelegationResponse,
+  >,
+  'get_principal' : ActorMethod<[UserNumber, FrontendHostname], Principal>,
+  'http_request' : ActorMethod<[HttpRequest], HttpResponse>,
+  'init_salt' : ActorMethod<[], undefined>,
+  'lookup' : ActorMethod<[UserNumber], Array<DeviceData>>,
+  'prepare_delegation' : ActorMethod<
+    [UserNumber, FrontendHostname, SessionKey, [] | [bigint]],
+    [UserKey, Timestamp],
+  >,
+  'register' : ActorMethod<[DeviceData, ChallengeResult], RegisterResponse>,
+  'remove' : ActorMethod<[UserNumber, DeviceKey], undefined>,
+  'stats' : ActorMethod<[], InternetIdentityStats>,
 }

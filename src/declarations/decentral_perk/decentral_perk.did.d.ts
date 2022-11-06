@@ -1,22 +1,18 @@
 import type { Principal } from '@dfinity/principal';
-export type GetVendorErr = { 'NoStoreFound' : null };
-export type GetVendorReceipt = { 'Ok' : Vendor } |
-  { 'Err' : GetVendorErr };
-export type Profile = Profile_2;
-export interface Profile_2 {
-  'name' : string,
-  'description' : string,
-  'keywords' : Array<string>,
-}
-export interface Vendor {
-  'name' : string,
-  'description' : string,
-  'website' : string,
-}
+import type { ActorMethod } from '@dfinity/agent';
+
+export interface AddPostRequest { 'content' : string }
+export interface AddPostResponse { 'response' : AddPostResponseType }
+export type AddPostResponseType = { 'Error' : null } |
+  { 'Success' : null };
+export interface AddUserRequest { 'username' : string }
+export interface AddUserResponse { 'response' : AddUserResponseType }
+export type AddUserResponseType = { 'Error' : null } |
+  { 'Success' : null } |
+  { 'AlreadyAUser' : null };
+export interface Post { 'content' : string, 'created_timestamp' : bigint }
+export interface User { 'username' : string }
 export interface _SERVICE {
-  'get' : (arg_0: string) => Promise<Profile_2>,
-  'getAllVendors' : () => Promise<Array<Vendor>>,
-  'getMyStore' : () => Promise<GetVendorReceipt>,
-  'getSelf' : () => Promise<Profile_2>,
-  'update' : (arg_0: Profile_2) => Promise<undefined>,
+  'add_post' : ActorMethod<[AddPostRequest], AddPostResponse>,
+  'add_user' : ActorMethod<[AddUserRequest], AddPostResponse>,
 }

@@ -28,9 +28,9 @@
     "rollup-plugin-terser": "^7.0.0",
     "svelte": "^3.0.0",
     "svelte-chota": "^1.8.6"
-  },
+},
   "dependencies": {
-    "@dfinity/agent": "^0.10.1",
+    "@dfinity/agent": "^0.13.1",
     "@dfinity/auth-client": "^0.10.1",
     "@dfinity/authentication": "^0.10.2",
     "@dfinity/candid": "^0.10.2",

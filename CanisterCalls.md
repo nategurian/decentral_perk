@@ -1,5 +1,13 @@
 # Command Line Calls
 
+## Post calls
+
+### post
+```
+export PRINCIPAL = fdfuh-sxpv4-pe7jk-dmr6w-ttsdo-fowjx-uragx-nnmt6-c3z4x-udpwn-qae
+dfx canister call decentral_perk post 'record {title = "First Post"; content = "This is the first post!"; category = "General"}'
+```
+
 ## Profile Calls
 
 ### getSelf
