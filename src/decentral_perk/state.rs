@@ -7,7 +7,7 @@ use ic_cdk::export::{
 
 use crate::types;
 
-#[derive(CandidType, Deserialize)]
+#[derive(CandidType, Deserialize, Default)]
 pub struct State {
     pub users: BTreeMap<Principal, types::User>,
     pub posts: BTreeMap<Principal, types::Post>

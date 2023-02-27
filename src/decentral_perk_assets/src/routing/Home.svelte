@@ -1,22 +1,22 @@
 <script>
   import { onMount } from 'svelte';
-  import { vendors } from '../stores/store';
-  import { vendorStore } from '../stores/vendorStore';
-  import VendorCard from '../components/VendorCard/VendorCard.svelte';
+  import { auth } from '../stores/auth';
+  import { posts } from '../stores/post';
+  import PostDisplay from '../components/PostDisplay/PostDisplay.svelte';
  
-  onMount(() => {
-    // Check localStorage (for page refresh instances)
-    const persistedVendor = localStorage.getItem('vendor');
-    if(persistedVendor)
-      vendorStore.set(JSON.parse(persistedVendor))
+  onMount(async () => {
+    //console.log($auth.actor)
+    posts = await $auth.actor.get_posts();
   });
-  console.log('Vendors: ', $vendors)
 </script>
 
 <div class="page-container">
-  {#if $vendors.length > 0}
-    {#each $vendors as vendor}
-      <VendorCard vendor={vendor}  />
+  <div class="post-options-container">
+
+  </div>
+  <div class="posts">
+    {#each $posts as post}
+      <PostDisplay post={post} /> 
     {/each}
-  {/if}
+  </div>
 </div>

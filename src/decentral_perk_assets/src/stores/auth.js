@@ -9,7 +9,7 @@ export const createActor = (options) => {
     host: 
       process.env.DFX_NETWORK === 'ic'
         ? `https://${process.env.DECENTRAL_PERK_CANISTER_ID}.ic0.app`
-        : 'http://localhost:8000'
+        : 'http://localhost:8001'
   };
 
   if(!options) {
@@ -41,7 +41,6 @@ export const createActor = (options) => {
 };
 
 export const auth = writable({
-  loggedIn: false,
   principal: '',
   actor: createActor()
 })

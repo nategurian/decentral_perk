@@ -3,10 +3,7 @@
   import { Router, Route, Link } from 'svelte-routing';
   import { AuthClient } from '@dfinity/auth-client';
   import { auth, createActor } from '../stores/auth';
-  import { vendors } from '../stores/store';
-  import { vendorStore } from '../stores/vendorStore';
   import Home from '../routing/Home.svelte';
-  import Dashboard from '../routing/VendorDashboard.svelte';
   import { onMount } from 'svelte';
 
   // Variables
@@ -26,23 +23,7 @@
         }
       })
       auth.update(() => parsedPersistedAuth);
-      if($auth.loggedIn) {
-        const result = await $auth.actor.getMyStore();
-        console.log('My Store: ', result);
-        if(result.Ok) {
-          vendorStore.set(result.Ok);
-          localStorage.setItem('vendor', JSON.stringify(result.Ok));
-        }
-      }
     }
-    
-    // Call to get all vendors test
-    const vendorsResponse = await $auth.actor.getAllVendors();
-    if(vendorsResponse) {
-      vendors.set(vendorsResponse);
-      console.table(vendorsResponse)
-    }
-
   })
 
   // Auth Actions
@@ -55,7 +36,6 @@
 
   const handleAuth = async () => {
     auth.update(() => ({
-      loggedIn: true,
       principal: client.getIdentity().getPrincipal(),
       actor: createActor({
         agentOptions: {
@@ -65,26 +45,16 @@
     })); 
     // Note $uth.actor does not save properly to local storage.
     localStorage.setItem('auth', JSON.stringify($auth));
-    const result = await $auth.actor.getMyStore();
-    console.log('My Store: ', result);
     console.log('Principal: ', $auth.principal.toString())
-    if(result.Ok) {
-      vendorStore.set(result.Ok);
-      localStorage.setItem('vendor', JSON.stringify(result.Ok));
-    }
   };
 
   const handleLogout = async () => {
     console.log('Logging out...');
     localStorage.clear();
-    vendorStore.set(undefined)
     auth.update(() => ({
-      loggedIn: false,
       principal: '',
       actor: createActor() // created anon actor.
     }));
-    const test = await $auth.actor.getMyStore();
-    console.log('Test result: ', test)
     localStorage.setItem('auth', JSON.stringify($auth)); 
   };
 </script>
@@ -97,20 +67,12 @@
           <Link class="brand" to="/">deCentral Perk</Link>
         </div>
         <div class="nav" slot="right">
-          {#if !$auth.loggedIn}
+          {#if $auth.principal === ''}
             <Button primary on:click={handleLogin}>
               Login
             </Button>
-            <Button primary outline>
-              Sign Up
-            </Button>
           {:else}
             <Button dropdown={`${$auth.principal.toString().substring(0, 15)}...`} primary>
-              <p class="menu-option">My Orders</p>
-              {#if $vendorStore}
-                <Link class="nav-link" to="dashboard">My Store</Link>
-              {/if}
-              <hr />
               <p class="menu-option" on:click={handleLogout}>Logout</p>
             </Button>
           {/if}
@@ -119,7 +81,6 @@
     </div>
     <div>
       <Route path="/" component={Home} />
-      <Route path="dashboard" component={Dashboard} />
     </div> 
   </Router>
 </div>

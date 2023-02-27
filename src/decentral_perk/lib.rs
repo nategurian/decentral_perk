@@ -1,12 +1,17 @@
 mod state;
 mod types;
+mod utils;
+mod api;
 
 use std::cell::RefCell;
-use ic_cdk_macros::{post_upgrade, pre_upgrade};
+use candid::candid_method;
+use ic_cdk_macros::{post_upgrade, pre_upgrade, update, query};
+use ic_cdk::export::Principal;
 use state::State;
+use types::{AddPostRequest, AddPostResponse, Post};
 
 thread_local! {
-    static STATE: RefCell<Option<State>> = RefCell::new(None);
+    static STATE: RefCell<Option<State>> = RefCell::new(Some(State::new()));
 }
 
 /// A helper method to read the state.
@@ -40,33 +45,45 @@ fn set_state(state: State) {
 }
 
 //// LEAVE FOR NOW, we may want to initialize a state later on.
-//pub fn init(maybe_payload: Option<InitPayload>) {
-//    let init_at = utils::time_secs();
-//    let payload = maybe_payload.expect("There should be a payload when initializing the canister.");
-//    assert!(
-//        payload.seed_admin_principal_id.is_some(),
-//        "Seed principal ID should be set when initializing the canister."
-//    );
-//    assert!(
-//        payload.asset_canister_id.is_some(),
-//        "Asset canister ID should be set when initializing the canister."
-//    );
-//
-//    let payload = InitPayload::with_init_at(payload, init_at);
-//    ic_cdk::println!("{:#?}", payload);
-//
-//    set_state(State::new(payload))
-//}
+// #[init]
+// pub fn init() {
+//     // let init_at = utils::time_secs();
+//     // let payload = maybe_payload.expect("There should be a payload when initializing the canister.");
+//     // assert!(
+//     //     payload.seed_admin_principal_id.is_some(),
+//     //     "Seed principal ID should be set when initializing the canister."
+//     // );
+//     // assert!(
+//     //     payload.asset_canister_id.is_some(),
+//     //     "Asset canister ID should be set when initializing the canister."
+//     // );
+// // 
+//     // let payload = InitPayload::with_init_at(payload, init_at);
+//     // ic_cdk::println!("{:#?}", payload);
+//     set_state(State::new())
+// }
 
 #[pre_upgrade]
 pub fn pre_upgrade() {
     with_state(|state| ic_cdk::storage::stable_save((state,))).expect("Saving state must succeed.")
 }
 
-#[post_upgrade]
-pub fn post_upgrade() {
-    let state = ic_cdk::storage::stable_restore::<(State,)>()
-        .expect("Failed to read from stable memory.")
-        .0;
-    set_state(state);
+// #[post_upgrade]
+// pub fn post_upgrade() {
+//     let state = ic_cdk::storage::stable_restore::<(State,)>()
+//         .expect("Failed to read from stable memory.")
+//         .0;
+//     set_state(state);
+// }
+
+#[update]
+#[candid_method(update)]
+pub async fn add_post(request: AddPostRequest) -> AddPostResponse {
+    api::add_post(request)
+}
+
+#[query]
+#[candid_method(query)]
+pub async fn get_posts() -> Vec<(Principal, Post)> {
+    api::get_posts()
 }

@@ -17,12 +17,21 @@ type AddUserResponseType = variant {
 };
 
 type Post = record {
-    created_timestamp: nat64;
+    created_at: nat64;
     content: text;
+    category: PostCategory;
+    likes: nat64;
+};
+
+type PostCategory = variant {
+    General;
+    BrewTip;
+    Roasts;
 };
 
 type AddPostRequest = record {
     content: text;
+    category: PostCategory;
 };
 
 type AddPostResponse = record {
@@ -37,4 +46,5 @@ type AddPostResponseType = variant {
 service : {
     "add_user": (AddUserRequest) -> (AddPostResponse);
     "add_post": (AddPostRequest) -> (AddPostResponse);
+    "get_posts": () -> (vec record {principal; Post;});
 }

@@ -17,10 +17,9 @@ type AddUserResponseType = variant {
 };
 
 type Post = record {
-    created_at: nat64;
+    created_timestamp: nat64;
     content: text;
     category: PostCategory;
-    likes: nat64;
 };
 
 type PostCategory = variant {
